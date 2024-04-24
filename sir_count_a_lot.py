@@ -1,8 +1,12 @@
 import discord
 from discord.ext import commands
+from discord import Intents
 import os
 
-bot = commands.Bot(command_prefix='!')
+
+ints = Intents.all()
+
+bot = commands.Bot(command_prefix='!', intents=ints)
 
 message_counts = {}
 
@@ -12,7 +16,6 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
-
     if message.author == bot.user:
         return
     
@@ -31,4 +34,8 @@ async def message_count(ctx, member: discord.Member):
     count = message_counts.get(author_str, 0)
     await ctx.send(f'{member.display_name} has sent {count} messages.')
 
-bot.run(os.getenv('PUBLIC_KEY'))
+def main() -> None:
+    bot.run(os.getenv('SECRET_KEY'))
+
+if __name__ == '__main__':
+    main()
