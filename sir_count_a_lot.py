@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from discord import Intents
+from discord import Intents, client, channel
 import os
 
 
@@ -28,11 +28,14 @@ async def on_message(message):
     
     await bot.process_commands(message)
 
-@bot.command(name='msgcount')
-async def message_count(ctx, member: discord.Member):
-    author_str = str(member)
-    count = message_counts.get(author_str, 0)
-    await ctx.send(f'{member.display_name} has sent {count} messages.')
+@bot.command(name='anzahl')
+async def message_hist_count(ctx, member: discord.Member):
+    counter = 0
+    async for message in ctx.channel.history(limit=300):
+        if message.author == member:
+            counter += 1
+    await ctx.send(f'Hallo {member.display_name}! Du hast insgesamt **{counter} Nachrichten** in diesem Channel geschrieben. <3')
+
 
 def main() -> None:
     bot.run(os.getenv('SECRET_KEY'))
