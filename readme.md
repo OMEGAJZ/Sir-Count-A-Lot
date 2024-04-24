@@ -1,0 +1,1 @@
+This is a simple Discord bot which counts all send messages from every author in a Discord channel. 
