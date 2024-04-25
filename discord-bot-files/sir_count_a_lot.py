@@ -77,11 +77,11 @@ async def word_ranking(ctx):
 
 
 @bot.command(name='intro')
-async def help(ctx):
+async def hallo(ctx):
     await ctx.send(intro_msg)
 
 @bot.command(name='befehle')
-async def help(ctx):
+async def hilfe(ctx):
     await ctx.send(befehle)
 
 
