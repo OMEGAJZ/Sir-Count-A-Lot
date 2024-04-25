@@ -1,3 +1,5 @@
 .venv
 .env
 legacy.py
+archive
+__pycache__
