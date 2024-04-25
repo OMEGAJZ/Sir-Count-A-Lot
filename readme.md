@@ -1,1 +1,1 @@
-This is a simple Discord bot which counts all send messages from every author in a Discord channel. 
+This is a simple Discord bot which counts messages, words, letters and ranks all participants of the Discord Server
