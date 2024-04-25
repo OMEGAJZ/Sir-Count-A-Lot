@@ -3,3 +3,4 @@
 legacy.py
 archive
 __pycache__
+*ipynb
