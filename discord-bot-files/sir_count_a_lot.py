@@ -1,12 +1,28 @@
 import discord
 from discord.ext import commands
 from discord import Intents, client, channel
+
 import os
+
 from on_event import ints, bot, on_ready
 from collections import Counter
 from intro import intro_msg, befehle
+from resources import pg_leskype_con
+
+from sqlalchemy import create_engine
+import pandas as pd
+
 
 # all bot commands are down below. 
+
+@bot.command(name='intro')
+async def hallo(ctx):
+    await ctx.send(intro_msg)
+
+@bot.command(name='befehle')
+async def hilfe(ctx):
+    await ctx.send(befehle)
+
 
 @bot.command(name='anzahl')
 async def message_hist_count(ctx, member: discord.Member):
@@ -76,14 +92,31 @@ async def word_ranking(ctx):
     await ctx.send(ranking_message)
 
 
-@bot.command(name='intro')
-async def hallo(ctx):
-    await ctx.send(intro_msg)
+# writing chat data to self hosted postgres db
 
-@bot.command(name='befehle')
-async def hilfe(ctx):
-    await ctx.send(befehle)
+connection_string = f'postgresql+psycopg2://{pg_leskype_con["username"]}:{pg_leskype_con["password"]}@{pg_leskype_con["host"]}:{pg_leskype_con["port"]}/{pg_leskype_con["database"]}'
 
+engine = create_engine(connection_string)
+
+@bot.command(name='parse')
+async def msg_parse(ctx):
+    messages = []
+
+    async for message in ctx.channel.history(limit=None):
+
+        messages.append({
+            'author': message.author.name,
+            'content': message.content,
+            'timestamp': message.created_at,
+            'account_creation': message.author.created_at,
+            'top_role': str(message.author.top_role) 
+        })
+
+    df = pd.DataFrame(messages)
+
+    df.to_sql('source_dc_data', con=engine, schema="source_dc_leskype", if_exists='replace')
+
+    await ctx.send('Messages have been saved to docker hosted postgres db instance.')
 
 # start main app / Discord bot
 

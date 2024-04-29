@@ -1,2 +1,4 @@
 discord.py
-
+SQLAlchemy
+psycopg2-binary
+pandas
