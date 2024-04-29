@@ -62,3 +62,7 @@ services:
 
 volumes:
   db-data:
+
+
+# Command for Uptime Kuma. Share docker.sock between UK container and all others
+#  - /var/run/docker.sock:/var/run/docker.sock
