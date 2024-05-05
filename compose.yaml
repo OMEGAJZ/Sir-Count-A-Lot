@@ -9,6 +9,7 @@ services:
       - "7070:7070"
     env_file:
       - .env
+    restart: always
     depends_on:
       db:
         condition: service_healthy
@@ -21,11 +22,13 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: deinemutterstinkt
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: analytics-db
     ports:
       - "5432:5432"
+    env_file:
+      - .env
     healthcheck:
       test: ["CMD", "pg_isready"]
       interval: 10s
@@ -35,17 +38,16 @@ services:
   pgadmin:
     container_name: pgadmin-container
     image: dpage/pgadmin4:latest
+    restart: always
     environment:
-      PGADMIN_DEFAULT_EMAIL: omega@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_DEFAULT_EMAIL: ${PGA_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGA_PASSWORD}
     ports:
       - "5050:80"
+    env_file:
+      - .env
     depends_on:
       - db
 
 volumes:
   db-data:
-
-
-# Command for Uptime Kuma. Share docker.sock between UK container and all others
-#  - /var/run/docker.sock:/var/run/docker.sock
